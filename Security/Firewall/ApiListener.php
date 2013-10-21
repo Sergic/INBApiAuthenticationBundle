@@ -5,6 +5,8 @@ namespace INB\Bundle\ApiAuthenticationBundle\Security\Firewall;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
@@ -16,10 +18,11 @@ class ApiListener implements ListenerInterface
     protected $securityContext;
     protected $authenticationManager;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, AuthenticationEntryPointInterface $authenticationEntryPoint)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
+        $this->authenticationEntryPoint = $authenticationEntryPoint;
     }
 
     public function handle(GetResponseEvent $event)
@@ -36,35 +39,11 @@ class ApiListener implements ListenerInterface
         try {
             $authToken = $this->authenticationManager->authenticate($token);
             $this->securityContext->setToken($authToken);
-        } catch (AuthenticationException $failed) {
-            // ... you might log something here
 
-            // To deny the authentication clear the token. This will redirect to the login page.
-            // $this->securityContext->setToken(null);
-            // return;
-
-            // Deny authentication with a '403 Forbidden' HTTP response
-            //$event->setResponse($this->getForbiddenResponse());
             return;
-        }
-        return;
-    }
+        } catch (AuthenticationException $failed) {
 
-//    private function getForbiddenResponse()
-//    {
-//        $response = new Response();
-//        $response->setStatusCode(403);
-//        $response->setContent(json_encode(array(
-//            'success' => 0,
-//            'errors' => array(
-//                array(
-//                    'code' => 403,
-//                    'exception_code' => 403,
-//                    'message' => 'Forbidden',
-//                )
-//            )
-//        )));
-//        $response->headers->set('Content-Type', 'application/json');
-//        return $response;
-//    }
+            $event->setResponse($this->authenticationEntryPoint->start($request, $failed));
+        }
+    }
 }

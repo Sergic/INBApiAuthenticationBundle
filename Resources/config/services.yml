@@ -1,19 +1,19 @@
 parameters:
-    inb_api_auth.security.authentication.provider.class:     INB\Bundle\ApiAuthenticationBundle\Security\Authentication\Provider\ApiProvider
-    inb_api_auth.security.authentication.listener.class:     INB\Bundle\ApiAuthenticationBundle\Security\Firewall\ApiListener
-    inb_api_auth.security.authentication.entry_point.class:  INB\Bundle\ApiAuthenticationBundle\Security\Http\EntryPoint\ApiAuthenticationEntryPoint
-    inb_api_auth.security.authentication.user_provider.class:               INB\Bundle\ApiAuthenticationBundle\Security\User\ApiUserProvider
+    inb_api_auth.security.authentication.provider.class:      INB\Bundle\ApiAuthenticationBundle\Security\Authentication\Provider\ApiProvider
+    inb_api_auth.security.authentication.listener.class:      INB\Bundle\ApiAuthenticationBundle\Security\Firewall\ApiListener
+    inb_api_auth.security.authentication.user_provider.class: INB\Bundle\ApiAuthenticationBundle\Security\User\ApiUserProvider
+    inb_api_auth.security.api.authentication.entry_point.class:  INB\Bundle\ApiAuthenticationBundle\Security\Http\EntryPoint\ApiAuthenticationEntryPoint
 
 services:
+      inb_api_auth.security.api.authentication.entry_point:
+          class: %inb_api_auth.security.api.authentication.entry_point.class%
+          arguments: [@http_kernel, @security.http_utils]
       inb_api_auth.security.authentication.user_provider:
           class: %inb_api_auth.security.authentication.user_provider.class%
       inb_api_auth.security.authentication.provider:
           class: %inb_api_auth.security.authentication.provider.class%
       inb_api_auth.provider:
           alias: inb_api_auth.security.authentication.user_provider
-      inb_api_auth.security.authentication.entry_point:
-          class: %inb_api_auth.security.authentication.entry_point.class%
-          arguments: [@http_kernel, @security.http_utils]
       inb_api_auth.security.authentication.listener:
           class:  %inb_api_auth.security.authentication.listener.class%
-          arguments: [@security.context, @security.authentication.manager]
+          arguments: [@security.context, @security.authentication.manager, @inb_api_auth.security.api.authentication.entry_point]

@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ApiFactory implements SecurityFactoryInterface
 {
-    public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
+    public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint = null)
     {
         $providerId = 'security.authentication.provider.'.$id;
         $container
@@ -52,7 +52,7 @@ class ApiFactory implements SecurityFactoryInterface
 
         $entryPointId = 'security.authentication.api_entry_point.'.$id;
         $container
-            ->setDefinition($entryPointId, new DefinitionDecorator('inb_api_auth.security.authentication.entry_point'))
+            ->setDefinition($entryPointId, new DefinitionDecorator('inb_api_auth.security.api.authentication.entry_point'))
         ;
 
         return $entryPointId;

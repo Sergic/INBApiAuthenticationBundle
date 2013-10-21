@@ -2,12 +2,15 @@
 
 namespace INB\Bundle\ApiAuthenticationBundle\Security\Http\EntryPoint;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
-use Symfony\Component\Security\Http\HttpUtils;
+use
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\Security\Core\Exception\AuthenticationException,
+    Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface,
+    Symfony\Component\Security\Http\HttpUtils,
+    Symfony\Component\HttpKernel\HttpKernelInterface
+;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ApiAuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
@@ -31,24 +34,11 @@ class ApiAuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return $this->getForbiddenResponse();
-    }
-
-    private function getForbiddenResponse()
-    {
-        $response = new Response();
-        $response->setStatusCode(403);
-        $response->setContent(json_encode(array(
-            'success' => 0,
-            'errors' => array(
-                array(
-                    'code' => 403,
-                    'exception_code' => 403,
-                    'message' => 'Forbidden',
-                )
-            )
-        )));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        if($authException){
+            throw new AccessDeniedException();
+        }
+        else{
+            return new Response('Authentication error', 403);
+        }
     }
 }

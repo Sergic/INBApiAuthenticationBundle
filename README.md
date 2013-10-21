@@ -137,4 +137,6 @@ security:
             anonymous: true
     encoders:
         Acme\AcmeBundle\Entity\User: sha512
+    access_control:
+        - { path: ^(/[^\/]+)/api/*|^/api/*, roles: [ROLE_USER] }
 ```

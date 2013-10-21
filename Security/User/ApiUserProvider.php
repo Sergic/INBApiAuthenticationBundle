@@ -38,7 +38,7 @@ class ApiUserProvider implements ApiUserProviderInterface
     {
         $refreshedUser = $this->userRepository->findOneBy(array('id' => $user->getId()));
         if (null === $refreshedUser) {
-            throw new UsernameNotFoundException(sprintf('User with ID "%d" could not be reloaded.', $user->getId()));
+            throw new ApiTokenNotFoundException(sprintf('User with ID "%d" could not be reloaded.', $user->getId()));
         }
 
         if (!$user instanceof ApiUserInterface) {

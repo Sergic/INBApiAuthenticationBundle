@@ -27,6 +27,10 @@ class ApiProvider
 
     public function authenticate(ApiUserToken $token)
     {
+        if (!$token->getApiToken()) {
+            throw new AuthenticationException('Token api is empty.');
+        }
+
         $token->setAttribute('lifetime', $this->lifetime);
 
         $user = $this->userProvider->loadUserByApiToken($token->getApiToken());
@@ -39,7 +43,6 @@ class ApiProvider
         }
 
         throw new AuthenticationException('The Api authentication failed.');
-
     }
 
     public function supports(TokenInterface $token)
