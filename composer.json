@@ -21,7 +21,7 @@
     "target-dir": "INB/Bundle/ApiAuthenticationBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.3.x-dev"
+            "dev-master": "0.1.x-dev"
         }
     }
 }
