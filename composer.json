@@ -1,0 +1,27 @@
+{
+    "name": "sergic/api-authentication-bundle",
+    "description": "Symfony2 api authentication bundle",
+    "keywords": ["api", "rest", "bundle", "symfony2", "authentication"],
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "Sergey Gerdel",
+            "email": "skif16@ukr.net",
+            "homepage": "http://sergic.me",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "symfony/symfony": ">=2.1.0"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": { "INB\\Bundle\\ApiAuthenticationBundle": "" }
+    },
+    "target-dir": "INB/Bundle/ApiAuthenticationBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.3.x-dev"
+        }
+    }
+}
