@@ -33,6 +33,10 @@ class ApiUserProvider implements ApiUserProviderInterface
         return $user;
     }
 
+    public function loadUserByUsername($username)
+    {
+
+    }
 
     public function refreshUser(UserInterface $user)
     {
